@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ontop.zoath.alarm.dao.AlarmInfoDao">
+    <!--报警信息的查询，分数据湖，医生，孪生，数据湖需要查所有的数据，不需要传module_type-->
+    <select id="selectAlarmInfoByPage" resultType="com.ontop.zoath.alarm.model.AlarmInfo">
+        SELECT
+        ai.alarm_id,
+        ai.module_type,
+        ai.alarm_name,
+        ai.object_id,
+        ai.object_code,
+        ai.alarm_level,
+        ai.description,
+        ai.formula,
+        ai.alarm_way,
+        ai.alarm_type,
+        ai.status,
+        ai.his_rule,
+        ai.create_user_id,
+        ai.update_time,
+        ai.create_time,
+        oi.object_name
+        from bus_alarm_info ai
+        left join
+        bus_object_info oi on ai.object_id=oi.object_id
+        where
+        1=1
+        <if test="alarm_name!=null and alarm_name!='' ">
+            and ai.alarm_name LIKE CONCAT(CONCAT('%', #{alarm_name}),'%')
+        </if>
+        <if test="object_id!=null ">
+            and ai.object_id =#{object_id}
+        </if>
+        <if test="alarm_level!=null and alarm_level!='' ">
+            and ai.alarm_level =#{alarm_level}
+        </if>
+        <if test="module_type!=null and module_type!='' ">
+            and ai.module_type =#{module_type}
+        </if>
+        order by ai.alarm_id desc
+    </select>
+    <select id="selectAlarmInfoByAlarmId" resultType="com.ontop.zoath.alarm.model.AlarmInfo">
+        SELECT
+        alarm_id,
+        module_type,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time
+        from bus_alarm_info
+        where alarm_id = #{alarm_id}
+    </select>
+
+    <select id="selectAlarmInfoByDeviceId" resultType="com.ontop.zoath.alarm.model.AlarmInfo">
+        SELECT
+        alarm_id,
+        module_type,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time
+        from bus_alarm_info
+        where object_id = #{object_id}
+    </select>
+
+    <select id="selectAlarmInfoByParams" resultType="com.ontop.zoath.alarm.model.AlarmInfo">
+        SELECT
+        alarm_id,
+        module_type,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time
+        from bus_alarm_info
+        where object_id = #{object_id}
+        and alarm_name=#{alarm_name}
+    </select>
+    <select id="selectAlarmInfoListByObjectId" resultType="com.ontop.zoath.alarm.model.AlarmInfo">
+        SELECT
+        alarm_id,
+        module_type,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time
+        from bus_alarm_info
+        where object_id = #{object_id}
+    </select>
+    <insert id="insertAlarmInfo"
+            parameterType="com.ontop.zoath.alarm.model.AlarmInfo"
+            useGeneratedKeys="true"
+            keyProperty="alarm_id">
+        insert into bus_alarm_info
+        (
+        module_type,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time)
+        values
+        (
+        #{module_type},
+        #{alarm_name},
+        #{object_id},
+        #{object_code},
+        #{alarm_level},
+        #{description},
+        #{formula},
+        #{alarm_way},
+        #{alarm_type},
+        #{status},
+        #{his_rule},
+        #{create_user_id},
+        #{update_time},
+        #{create_time}
+        )
+    </insert>
+    <insert id="insertAlarmItems" parameterType="java.util.LinkedList">
+        insert into bus_alarm_items
+        (alarm_id,
+        order_number,
+        point_data_id,
+        logical_signal,
+        item_value,
+        next_logical_formula,
+        create_time)
+        values
+        <foreach collection="alarmItemsList" item="po" index="index" separator=",">
+            (
+            #{po.alarm_id},
+            #{po.order_number},
+            #{po.point_data_id},
+            #{po.logical_signal},
+            #{po.item_value},
+            #{po.next_logical_formula},
+            #{po.create_time}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="addAlarmItems">
+        insert into bus_alarm_items
+        (alarm_id,
+        order_number,
+        point_data_id,
+        logical_signal,
+        item_value,
+        next_logical_formula,
+        create_time)
+        values
+        (
+        #{alarm_id},
+        #{order_number},
+        #{point_data_id},
+        #{logical_signal},
+        #{item_value},
+        #{next_logical_formula},
+        #{create_time}
+        )
+    </insert>
+
+    <update id="updateAlarmInfoByAlarmId" parameterType="com.ontop.zoath.alarm.model.AlarmInfo">
+        update bus_alarm_info
+        <set>
+            <if test=" module_type !=null">module_type=#{module_type},</if>
+            <if test=" alarm_name !=null">alarm_name=#{alarm_name},</if>
+            <if test=" object_id !=null">object_id=#{object_id},</if>
+            <if test=" object_code !=null">object_code=#{object_code},</if>
+            <if test=" alarm_level !=null">alarm_level=#{alarm_level},</if>
+            <if test="description !=null">description=#{description},</if>
+            <if test=" formula!=null">formula=#{formula},</if>
+            <if test="alarm_way !=null">alarm_way=#{alarm_way},</if>
+            <if test="alarm_type !=null">alarm_type=#{alarm_type},</if>
+            <if test="status !=null">status=#{status},</if>
+            <if test="his_rule !=null">his_rule=#{his_rule},</if>
+            <if test=" update_time!=null">update_time=#{update_time}</if>
+        </set>
+        where alarm_id=#{alarm_id}
+    </update>
+    <delete id="deleteAlarmItemsByAlarmId" parameterType="java.lang.Integer">
+        delete from bus_alarm_items
+        where alarm_id=#{alarm_id}
+    </delete>
+    <delete id="deleteAlarmInfoByAlarmId" parameterType="java.lang.Integer">
+        delete from bus_alarm_info where alarm_id=#{alarm_id}
+    </delete>
+    <select id="selectAlarmItemByAlarmId" resultType="com.ontop.zoath.alarm.model.AlarmItems">
+        select
+        a.items_id,
+        a.alarm_id,
+        a.order_number,
+        a.point_data_id,
+        p.data_name as point_data_name,
+        p.data_type,
+        p.c_data_type,
+        a.logical_signal,
+        a.item_value,
+        a.next_logical_formula,
+        a.create_time
+        from bus_alarm_items a
+        left join bus_object_point_data p on a.point_data_id = p.data_id
+        where alarm_id=#{alarm_id}
+    </select>
+    <select id="selectAllAlarmInfo" resultType="com.ontop.zoath.alarm.model.AlarmInfo">
+        SELECT
+        alarm_id,
+        module_type,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time
+        from bus_alarm_info
+        where 1=1
+        and create_user_id = #{create_user_id}
+        and module_type = #{module_type}
+        order by alarm_id desc
+    </select>
+    <select id="selectPointDataIdListByAlarmIdList" resultType="java.lang.Integer" parameterType="java.util.ArrayList">
+        select
+        distinct point_data_id
+        from
+        bus_alarm_items
+        where
+        alarm_id
+        in
+        <foreach collection="alarmIdList" index="index" item="alarm_id" open="(" separator="," close=")">
+            #{alarm_id}
+        </foreach>
+    </select>
+    <select id="selectPointDataIdPointKeyMapListByPointDataIdList" resultType="java.util.HashMap"
+            parameterType="java.util.ArrayList">
+        select
+        data_id,
+        data_code,
+        data_name,
+        point_key
+        from
+        bus_object_point_data
+        where
+        data_id
+        in
+        <foreach collection="pointDataIdList" index="index" item="data_id" open="(" separator="," close=")">
+            #{data_id}
+        </foreach>
+    </select>
+
+    <select id="selectAlarmInfoListByAlarmIdList" resultType="com.ontop.zoath.alarm.model.AlarmInfo"
+            parameterType="java.util.ArrayList">
+        SELECT
+        alarm_id,
+        alarm_name,
+        object_id,
+        object_code,
+        alarm_level,
+        description,
+        formula,
+        alarm_way,
+        alarm_type,
+        status,
+        his_rule,
+        create_user_id,
+        update_time,
+        create_time
+        from bus_alarm_info
+        where
+        alarm_id
+        in
+        <foreach collection="alarmIdList" index="index" item="alarm_id" open="(" separator="," close=")">
+            #{alarm_id}
+        </foreach>
+    </select>
+    <select id="selectAlarmInfoPressListByPointDataIdList" parameterType="java.util.ArrayList"
+            resultType="com.ontop.zoath.alarm.model.AlarmInfoPress">
+        SELECT
+        p.data_id,
+        o.object_id,
+        o.parent_id,
+        o.company_id,
+        o.object_code,
+        o.object_name,
+        o.factory,
+        o.object_type,
+        o.device_type,
+        o.temp_id,
+        o.box_device_id,
+        o.hidden_code,
+        o.is_custom,
+        o.object_img,
+        o.status,
+        o.buy_date,
+        o.arrival_date,
+        o.valid_end_date,
+        o.description,
+        o.is_display,
+        o.is_realdata,
+        o.is_alarm,
+        o.is_overview,
+        o.is_log,
+        o.driver_id,
+        o.create_user_id,
+        o.update_time,
+        o.create_time
+        FROM
+        bus_object_info o
+        LEFT JOIN bus_point_data p ON o.object_id = p.object_id
+        where
+        p.data_id
+        in
+        <foreach collection="pointDataIdList" index="index" item="data_id" open="(" separator="," close=")">
+            #{data_id}
+        </foreach>
+    </select>
+    <select id="selectAlarmInfoPressListByAlarmIdList" parameterType="java.util.ArrayList"
+            resultType="com.ontop.zoath.alarm.model.AlarmInfoPress">
+        SELECT
+        o.object_id,
+        o.parent_id,
+        o.company_id,
+        o.object_code,
+        o.object_name,
+        o.factory,
+        o.object_type,
+        o.device_type,
+        o.temp_id,
+        o.box_device_id,
+        o.hidden_code,
+        o.is_custom,
+        o.object_img,
+        o.status,
+        o.buy_date,
+        o.arrival_date,
+        o.valid_end_date,
+        o.description,
+        o.is_display,
+        o.is_realdata,
+        o.is_alarm,
+        o.is_overview,
+        o.is_log,
+        o.driver_id,
+        o.create_user_id,
+        o.update_time,
+        o.create_time
+        FROM
+        bus_object_info o
+        LEFT JOIN bus_alarm_info p ON o.object_id = p.object_id
+        where
+        p.alarm_id
+        in
+        <foreach collection="alarmIdList" index="index" item="alarm_id" open="(" separator="," close=")">
+            #{alarm_id}
+        </foreach>
+    </select>
+    <select id="selectAllAlarmItems" resultType="com.ontop.zoath.alarm.model.AlarmItems">
+        select
+        items_id,
+        alarm_id,
+        order_number,
+        point_data_id,
+        logical_signal,
+        item_value,
+        next_logical_formula,
+        create_time
+        from bus_alarm_items
+    </select>
+
+    <select id="selectAlarmTypeStatusById" resultType="java.lang.Integer">
+        select
+        count(1) alarm_type
+        FROM
+        bus_alarm_info
+        where
+        alarm_type = #{type_id}
+    </select>
+</mapper>

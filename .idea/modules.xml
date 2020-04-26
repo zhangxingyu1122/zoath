@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/zoath.iml" filepath="$PROJECT_DIR$/zoath.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zoath-common/zoath-common.iml" filepath="$PROJECT_DIR$/zoath-common/zoath-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zoath-main/zoath-main.iml" filepath="$PROJECT_DIR$/zoath-main/zoath-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zoath-redis/zoath-redis.iml" filepath="$PROJECT_DIR$/zoath-redis/zoath-redis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zoath-servers/zoath-servers.iml" filepath="$PROJECT_DIR$/zoath-servers/zoath-servers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zoath-servers-api/zoath-servers-api.iml" filepath="$PROJECT_DIR$/zoath-servers-api/zoath-servers-api.iml" />
+    </modules>
+  </component>
+</project>

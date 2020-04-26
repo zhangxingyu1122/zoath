@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="zoath-common" />
+        <module name="zoath-redis" />
+        <module name="zoath-servers" />
+        <module name="zoath-servers-api" />
+        <module name="zoath-main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="zoath" target="1.8" />
+      <module name="zoath-common" target="1.8" />
+      <module name="zoath-main" target="1.8" />
+      <module name="zoath-redis" target="1.8" />
+      <module name="zoath-servers" target="1.8" />
+      <module name="zoath-servers-api" target="1.8" />
+      <module name="zvs-es" target="1.8" />
+      <module name="zvs-feign" target="1.8" />
+      <module name="zvs-redis" target="1.8" />
+      <module name="zvs-shiro" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="zoath" options="" />
+      <module name="zoath-common" options="-parameters -Xlint:deprecation" />
+      <module name="zoath-main" options="-parameters -Xlint:deprecation" />
+      <module name="zoath-redis" options="-parameters -Xlint:deprecation" />
+      <module name="zoath-servers" options="-parameters -Xlint:deprecation" />
+      <module name="zoath-servers-api" options="-parameters -Xlint:deprecation" />
+      <module name="zvs-es" options="-parameters -Xlint:deprecation" />
+      <module name="zvs-feign" options="-parameters -Xlint:deprecation" />
+      <module name="zvs-redis" options="-parameters -Xlint:deprecation" />
+      <module name="zvs-shiro" options="-parameters -Xlint:deprecation" />
+    </option>
+  </component>
+</project>
